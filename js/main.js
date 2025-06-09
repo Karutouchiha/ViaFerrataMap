@@ -15,35 +15,56 @@ L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
 // --- VIA FERRATA GEOJSON ---
 L.geoJSON(viaferrata, {
+    filter: feature => {
+      const access = feature?.properties?.access;
+      return access !== 'private' && access !== 'no';
+    },
     style: feature => feature.geometry.type !== 'Point' ? {
-        color: '#0e37dd',
+        color: '#d7191c',
         weight: 4,
+        opacity: .5
     } : null,
-    pointToLayer: (feature, latlng) => cirlceMarkers(feature, latlng),
-    onEachFeature: (feature, layer) => handleFeatures(feature, layer),
-
+    pointToLayer: (feature, latlng) => circleMarkers(feature, latlng),
+    onEachFeature: (feature, layer) => handleFeatures(feature, layer)
 }).addTo(map);
+
 function handleFeatures(feature, layer) {
-    const props = feature.properties || {};
-    const sac = props.sac_scale || 'N/A';
-    const ferrata = props.via_ferrata_scale || 'N/A';
+    const p = feature.properties || {};
+
+    // Format values
+    const name = p.name || 'Unnamed Via Ferrata';
+    const scale = p.via_ferrata_scale || 'Unknown';
+    const sac = (p.sac_scale || '').replace(/_/g, ' ') || 'N/A';
+    const route = p.route || 'Unknown';
+    const website = p.website ? `<a href="${p.website}" target="_blank">Link to the Website</a>` : 'N/A';
+    const fee = p.fee || 'Not stated';
+    const access = p.access || 'Not stated';
+    const description = p.description || '';
 
     const popupContent = `
-        <strong>${props.name || 'Via Ferrata'}</strong><br>
+        <strong>${name}</strong><br><br>
+        ${description ? `<em>${description}</em><br><br>` : ''}
+        <b>Via Ferrata Scale:</b> ${scale}<br>
         <b>SAC Scale:</b> ${sac}<br>
-        <b>Via Ferrata Scale:</b> ${ferrata}
+        <b>Route Type:</b> ${route}<br>
+        <b>Access:</b> ${access}<br>
+        <br>
+        <b>Fee:</b> ${fee}<br>
+        <b>Website:</b> ${website}
     `;
 
     layer.bindPopup(popupContent);
 }
 
-function cirlceMarkers(feature, latlng) {
-    L.circleMarker(latlng, {
-        radius: 4,
+
+
+function circleMarkers(feature, latlng) {
+    return L.circleMarker(latlng, {
+        radius: 5,
         fillColor: '#b16e6f',
         color: '#d7191c',
-        weight: 1,
+        weight: 2,
         opacity: 1,
         fillOpacity: 0.5
-    })
+    });
 }
