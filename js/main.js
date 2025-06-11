@@ -14,7 +14,7 @@ L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
 // --- VIA FERRATA GEOJSON ---
-L.geoJSON(viaferrata, {
+var ferrata = L.geoJSON(viaferrata, {
     filter: feature => {
       const access = feature?.properties?.access;
       return access !== 'private' && access !== 'no';
@@ -29,6 +29,7 @@ L.geoJSON(viaferrata, {
 }).addTo(map);
 
 function handleFeatures(feature, layer) {
+    interactiveFunction(feature,layer)
     const p = feature.properties || {};
 
     // Format values
@@ -56,8 +57,6 @@ function handleFeatures(feature, layer) {
     layer.bindPopup(popupContent);
 }
 
-
-
 function circleMarkers(feature, latlng) {
     return L.circleMarker(latlng, {
         radius: 5,
@@ -67,4 +66,38 @@ function circleMarkers(feature, latlng) {
         opacity: 1,
         fillOpacity: 0.5
     });
+}
+
+function highlightFeature(e) {
+    var activefeature = e.target;  //access to activefeature that was hovered over through e.target
+
+    activefeature.setStyle({
+        weight: 5,
+        color: '#0e37dd',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera) {
+        activefeature.bringToFront();
+    }
+}
+
+
+//function for resetting the highlight
+function resetHighlight(e) {
+    ferrata.resetStyle(e.target);
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+//to call these methods we need to add listeners to our features
+function interactiveFunction(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    } );
 }
