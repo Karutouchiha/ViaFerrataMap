@@ -20,7 +20,7 @@ var ferrata = L.geoJSON(viaferrata, {
       return access !== 'private' && access !== 'no';
     },
     style: feature => feature.geometry.type !== 'Point' ? {
-        color: '#d7191c',
+        color: '#0e37dd',
         weight: 4,
         opacity: .5
     } : null,
@@ -60,8 +60,8 @@ function handleFeatures(feature, layer) {
 function circleMarkers(feature, latlng) {
     return L.circleMarker(latlng, {
         radius: 5,
-        fillColor: '#b16e6f',
-        color: '#d7191c',
+        fillColor: '#6875b6',
+        color: '#0e37dd',
         weight: 2,
         opacity: 1,
         fillOpacity: 0.5
@@ -73,7 +73,7 @@ function highlightFeature(e) {
 
     activefeature.setStyle({
         weight: 5,
-        color: '#0e37dd',
+        color: '#d7191c',
         dashArray: '',
         fillOpacity: 0.7
     });
