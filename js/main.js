@@ -14,16 +14,20 @@ L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
 // --- VIA FERRATA GEOJSON ---
-var ferrata = L.geoJSON(viaferrata, {
-    filter: feature => {
-      const access = feature?.properties?.access;
-      return access !== 'private' && access !== 'no';
-    },
-    style: feature => feature.geometry.type !== 'Point' ? {
-        color: '#0e37dd',
-        weight: 4,
-        opacity: .5
-    } : null,
+let filterPrivateViaFerrata = feature => {
+    const access = feature?.properties?.access;
+    return access !== 'private' && access !== 'no';
+};
+
+let styleViaFerrata = feature => feature.geometry.type !== 'Point' ? {
+    color: '#0e37dd',
+    weight: 4,
+    opacity: .8
+} : null;
+
+let viaFerrata = L.geoJSON(viaferrata, {
+    filter: filterPrivateViaFerrata,
+    style: styleViaFerrata,
     pointToLayer: circleMarkers,
     onEachFeature: handleFeatures
 }).addTo(map);
@@ -53,9 +57,9 @@ function circleMarkers(feature, latlng) {
 }
 
 function highlightActiveFeature(e) {
-    var activefeature = e.target;
+    let activeFeature = e.target;
 
-    activefeature.setStyle({
+    activeFeature.setStyle({
         weight: 5,
         color: '#d7191c',
         dashArray: '',
@@ -63,12 +67,12 @@ function highlightActiveFeature(e) {
     });
 
     if (!L.Browser.ie && !L.Browser.opera) {
-        activefeature.bringToFront();
+        activeFeature.bringToFront();
     }
 }
 
 function resetHighlight(e) {
-    ferrata.resetStyle(e.target);
+    viaFerrata.resetStyle(e.target);
 }
 
 function zoomToFeature(e) {
