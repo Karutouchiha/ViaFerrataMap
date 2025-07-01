@@ -118,3 +118,20 @@ function bindPopup(feature, layer) {
 
     layer.bindPopup(popupContent);
 }
+
+
+var legend = L.control({ position: 'bottomright' });
+
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+
+    div.innerHTML += '<strong>Legend</strong><br>';
+    div.innerHTML +=
+        '<span class="legend-icon-dot"></span>Path<br>';
+    div.innerHTML +=
+        '<span class="legend-icon-line"></span> Via Ferrata Route<br>';
+
+    return div;
+};
+
+legend.addTo(map);
