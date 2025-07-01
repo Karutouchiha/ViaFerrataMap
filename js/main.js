@@ -5,10 +5,22 @@ const map = L.map('map', {
 });
 
 // Add base map
-L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     maxZoom: 17,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+});
+
+var OpenStreetMap_Mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
+
+var baseMaps = {
+    "Satelite": OpenStreetMap_Mapnik,
+    "Topographik": OpenTopoMap,
+}
+
+OpenStreetMap_Mapnik.addTo(map);
 
 // Add scale bar (metric only)
 L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
