@@ -21,6 +21,7 @@ var baseMaps = {
 }
 
 OpenStreetMap_Mapnik.addTo(map);
+L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(map);
 
 // Add scale bar (metric only)
 L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
@@ -127,9 +128,9 @@ legend.onAdd = function (map) {
 
     div.innerHTML += '<strong>Legend</strong><br>';
     div.innerHTML +=
-        '<span class="legend-icon-dot"></span>Path<br>';
+        '<span class="legend-icon-dot"></span>Short Route<br>';
     div.innerHTML +=
-        '<span class="legend-icon-line"></span> Via Ferrata Route<br>';
+        '<span class="legend-icon-line"></span>Route<br>';
 
     return div;
 };
