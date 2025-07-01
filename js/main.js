@@ -26,7 +26,6 @@ L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(map);
 // Add scale bar (metric only)
 L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
-// --- VIA FERRATA GEOJSON ---
 let filterPrivateViaFerrata = feature => {
     const access = feature?.properties?.access;
     return access !== 'private' && access !== 'no';
@@ -38,6 +37,7 @@ let styleViaFerrata = feature => feature.geometry.type !== 'Point' ? {
     opacity: .8
 } : null;
 
+// --- VIA FERRATA GEOJSON ---
 let viaFerrata = L.geoJSON(viaferrata, {
     filter: filterPrivateViaFerrata,
     style: styleViaFerrata,
@@ -45,6 +45,7 @@ let viaFerrata = L.geoJSON(viaferrata, {
     onEachFeature: handleFeatures
 }).addTo(map);
 
+//adds interactive elements to features
 function handleFeatures(feature, layer) {
     interactiveFunction(feature,layer)
     bindPopup(feature,layer)
@@ -120,8 +121,8 @@ function bindPopup(feature, layer) {
     layer.bindPopup(popupContent);
 }
 
-
-var legend = L.control({ position: 'bottomright' });
+// add legend
+let legend = L.control({ position: 'bottomright' });
 
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend');
